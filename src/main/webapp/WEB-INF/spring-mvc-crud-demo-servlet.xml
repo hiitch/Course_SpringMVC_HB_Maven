@@ -17,12 +17,12 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-	<!-- Add AspectJ autoproxy support for AOP -->
-	<aop:aspectj-autoproxy />
-
 	<!-- Add support for component scanning -->
 	<context:component-scan base-package="com.webcustomer" />
-
+	
+	<!-- Add AspectJ autoproxy support for AOP -->
+	<aop:aspectj-autoproxy />
+	
 	<!-- Add support for conversion, formatting and validation support -->
 	<mvc:annotation-driven/>
 
@@ -72,7 +72,6 @@
 
 	<!-- Add support for reading web resources: css, images, js, etc ... -->
 	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
-	
 </beans>
 
 
