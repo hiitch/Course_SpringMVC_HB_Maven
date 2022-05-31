@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page import="com.webcustomer.utils.SortField" %>
 
 <!DOCTYPE html>
@@ -19,15 +20,29 @@
 	
 	<div id="container">
 		<div id="content">
+			<h3>Hello, <security:authentication property="principal.username" /> <security:authentication property="principal.authorities" /></h3>
 			
-			<input type="button" value="Add Customer" onclick="window.location.href='showFormForAdd'; return false;"
-				class="add-button"
-			/>
+			<ul style="width: 71%;">
+				<security:authorize access="hasRole('ADMIN')">	
+					<li><a href="${pageContext.request.contextPath}/menu/admin">Admin panel</a></li>
+				</security:authorize>
+				<security:authorize access="hasRole('MANAGER')">
+					<li><a href="${pageContext.request.contextPath}/menu/manager">Manager panel</a></li>
+				</security:authorize>
+			</ul>
+			
+			<div style="width: 71%; clear:both; padding-top:15px">
+				<input type="button" value="Add Customer" onclick="window.location.href='showFormForAdd'; return false;"
+					class="add-button"
+				/>
+				<form:form action="${pageContext.request.contextPath}/logout" method="POST" id="logout-button">
+					<input type="submit" value="Logout" class="add-button" />
+				</form:form>
+			</div>
 			<form:form action="search" method="GET">
 				<input type="text" name="customerName" />
 				<input type="submit" value="Search" class="add-button" />
 			</form:form>
-			
 			
 			<c:url var="sortLinkFirstName" value="/customer/list">
 				<c:param name="sort" value="<%= Integer.toString(SortField.FIRST_NAME.sortIndex) %>" />
