@@ -21,11 +21,6 @@
 	<div id="container">
 		<div id="content">
 			
-			<ul style="width: 71%;">
-				<li><a href="${pageContext.request.contextPath}/menu/admin">Admin panel</a></li>
-				<li><a href="${pageContext.request.contextPath}/menu/manager">Manager panel</a></li>
-			</ul>
-			
 			<h3>
 				Hello only admins can access to this page !<br>
 				If you see this page it means you are an admin and you can handle route with spring security.

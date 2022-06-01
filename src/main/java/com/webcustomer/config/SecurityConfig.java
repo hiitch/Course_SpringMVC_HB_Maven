@@ -1,25 +1,30 @@
 package com.webcustomer.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.webcustomer.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+	@Autowired
+	private UserService userService;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		UserBuilder users = User.withDefaultPasswordEncoder();
-		
-		auth.inMemoryAuthentication()
-			.withUser(users.username("john").password("test123").roles("EMPLOYEE"))
-			.withUser(users.username("mary").password("test123").roles("EMPLOYEE", "MANAGER"))
-			.withUser(users.username("susan").password("test123").roles("EMPLOYEE", "ADMIN"));
+		auth.authenticationProvider(authenticationProvider());
 	}
 
 	@Override
@@ -33,10 +38,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.formLogin()
 					.loginPage("/showLoginPage")
 					.loginProcessingUrl("/login")
+					.successHandler(customAuthenticationSuccessHandler)
 					.permitAll()
 			.and()
 				.logout().permitAll()
 			.and()
 				.exceptionHandling().accessDeniedPage("/access-denied");
+		
+		http.sessionManagement().invalidSessionUrl("/showMyLoginPage");
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+		auth.setUserDetailsService(userService);
+		auth.setPasswordEncoder(passwordEncoder());
+		return auth;
 	}
 }
