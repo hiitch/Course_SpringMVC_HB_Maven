@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.exceptionHandling().accessDeniedPage("/access-denied");
 		
-		http.sessionManagement().invalidSessionUrl("/showMyLoginPage");
+		http.sessionManagement().invalidSessionUrl("/showLoginPage");
 	}
 	
 	@Bean

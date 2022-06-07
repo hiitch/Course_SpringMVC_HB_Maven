@@ -16,6 +16,7 @@
 
 <body>
 	<div>
+		<a href="${pageContext.request.contextPath}/test/hello">Test REST call</a>
 		<div id="loginbox" style="margin-top: 50px;"
 			class="mainbox col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2">
 			<div class="panel panel-info">
