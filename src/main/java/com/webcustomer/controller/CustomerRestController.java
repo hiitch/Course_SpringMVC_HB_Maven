@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webcustomer.entity.Customer;
+import com.webcustomer.exception.CustomerNotFoundException;
 import com.webcustomer.service.CustomerService;
 import com.webcustomer.utils.SortField;
 
@@ -36,6 +37,11 @@ public class CustomerRestController {
 	@GetMapping("/customers/{customerId}")
 	public Customer getCustomer(@PathVariable int customerId) {
 		Customer customer = customerService.getCustomerByID(customerId);
+		
+		if (Objects.isNull(customer)) {
+			throw new CustomerNotFoundException("Customer id not found - " + customerId);
+		}
+		
 		return customer;
 	}
 }
